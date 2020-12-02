@@ -58,3 +58,11 @@ sysinfo.txt
 # Crashlytics generated file
 crashlytics-build.properties
 
+#Ignore all files and folders.
+/*
+
+#Except the Assets and ProjectSettings folder, as well as the selected Git files.
+!Assets/
+!ProjectSettings/
+!.gitignore
+!.gitattributes
