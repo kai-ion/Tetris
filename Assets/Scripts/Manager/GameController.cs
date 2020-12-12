@@ -8,6 +8,9 @@ public class GameController : MonoBehaviour
 
     Spawner spawner;    //refernce spawner script
 
+    public GameObject gameover_panel;
+    bool game_over = false;
+
     Blocks current_block;   //currently active block
     float drop_interval = .25f;
     float drop_timer;  
@@ -72,7 +75,10 @@ public class GameController : MonoBehaviour
             Debug.LogWarning("No Layout Defined!");
         }
 
-        
+        if (gameover_panel)
+		{
+			gameover_panel.SetActive(false);
+		}
     }
     
     private void Controll() 
@@ -97,7 +103,15 @@ public class GameController : MonoBehaviour
             //make sure block dont over lap
             if (!layout.isValidPosition(current_block))
             {
+                if (layout.IsOverLimit(current_block))
+				{
+                    GameOver();
+				}
+				else
+				{
+					//call method to handle block landing
                 LandBlock();
+				}  
             }
     	}
         
@@ -183,7 +197,8 @@ public class GameController : MonoBehaviour
     void Update()
     {
         //if spawner or layout notset dont update the game
-        if (!layout || !spawner || !current_block)
+        //also dont call player control when game is over
+        if (!layout || !spawner || !current_block || game_over)
         {
             return;
         }
@@ -195,4 +210,26 @@ public class GameController : MonoBehaviour
 
        
     }
+
+    // triggered when we are over the board's limit
+	void GameOver ()
+	{
+		// move the shape one row up
+		current_block.MoveUp ();
+
+		// turn on the Game Over Panel
+		if (gameover_panel) {
+			gameover_panel.SetActive (true);
+		}
+
+		// set the game over condition to true
+		game_over = true;
+	}
+
+    // reload the level
+	public void Restart()
+	{
+		//Debug.Log("Restart");
+		Application.LoadLevel(Application.loadedLevel);
+	}
 }

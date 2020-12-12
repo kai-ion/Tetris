@@ -186,4 +186,20 @@ public class Layout : MonoBehaviour
             }
         }
     }
+
+    /*
+        method to check if block went over limit
+        loops through and check if each child block passes layout height
+    */
+    public bool IsOverLimit(Blocks block)
+	{
+		foreach (Transform child in block.transform) 
+		{
+			if (child.transform.position.y >= layout_height - layout_header - 1)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
 }
