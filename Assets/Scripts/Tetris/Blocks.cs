@@ -51,7 +51,7 @@ public class Blocks : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        InvokeRepeating("MoveDown", 0, 0.5f);       //calls down method and make block fall every .5 sec        
+       // InvokeRepeating("MoveDown", 0, 0.5f);       //calls down method and make block fall every .5 sec        
     }
 
     // Update is called once per frame

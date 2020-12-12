@@ -15,7 +15,7 @@ public class Layout : MonoBehaviour
 
     //run before Start
     void Awake() {
-        layout_grid = new Transform[layout_height, layout_width];
+        layout_grid = new Transform[layout_width, layout_height];
     }
 
     // Start is called before the first frame update
@@ -28,6 +28,40 @@ public class Layout : MonoBehaviour
     void Update()
     {
         
+    }
+
+    //takes in two parameter and set as layout width boundary
+    bool isInLayout(int x, int y) {
+        return (x >= 0 && x < layout_width && y >= 0);
+    }
+
+    //checks if the block overlaps
+    bool isOverlay(int x, int y, Blocks block)
+    {
+        return (layout_grid[x,y] != null && layout_grid[x,y].parent != block.transform);
+    }
+
+    /*
+    check if each block inside the layout is inside the width boundary
+    */
+    public bool isValidPosition (Blocks block)
+    {
+        //loop to check if block is in boundary and if it overlaps
+        foreach (Transform child in block.transform)
+        {
+            Vector2 position = Vectorf.Round(child.position);
+
+            if (!isInLayout((int) position.x, (int) position.y))
+            {
+                return false;
+            }
+
+            if (isOverlay((int) position.x, (int) position.y, block))
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
     //use loops and square sprite to create cell table
@@ -54,6 +88,23 @@ public class Layout : MonoBehaviour
         else
         {
             Debug.Log("Error! Assign sprite object!");
+        }
+    }
+
+    /*
+        store the block into the layout_grid array as a child class
+    */
+    public void StoreBlock(Blocks block)
+    {
+        if (block == null)
+        {
+            return;
+        }
+
+        foreach (Transform child in block.transform)
+        {
+            Vector2 position = Vectorf.Round(child.position);
+            layout_grid[(int) position.x, (int)position.y] = child;
         }
     }
 }
