@@ -107,4 +107,83 @@ public class Layout : MonoBehaviour
             layout_grid[(int) position.x, (int)position.y] = child;
         }
     }
+
+    /*
+        is row complete
+    */
+    bool isComplete(int y)
+    {
+        //for loop to check each row and see if its filled out
+        for (int x = 0; x < layout_width; x++)
+        {
+            if (layout_grid[x,y] == null)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /*
+        clear row method
+    */
+    void ClearRow(int y)
+    {
+        //for loop to destroy layout_grid with full row
+        for (int x = 0; x < layout_width; x++)
+        {
+            if (layout_grid[x,y] != null)
+            {
+                Destroy(layout_grid[x,y].gameObject);
+            }
+            layout_grid[x,y] = null; //free up the row destroyed in game datastructure
+        }
+    }
+
+    /*
+        shift row down after row clear method
+    */
+    void ShiftDown(int y)
+    {
+        //for loop to check complete rows and copy it down
+        for (int x = 0; x < layout_width; x++)
+        {
+            if (layout_grid[x,y] != null)
+            {
+                layout_grid[x,y - 1] = layout_grid[x,y];    //set row under = to row above
+                layout_grid[x,y] = null; //free up the row destroyed in game datastructure
+                layout_grid[x,y - 1].position += new Vector3(0 , -1, 0);    //allow the drop transform to continue
+            }
+            
+        }
+    }
+
+    /*
+        shift multiple row
+    */
+    void ShiftRowsDown(int y)
+    {
+        //for loop to copy rows down from wanted row, if its complete
+        for (int i = y; i < layout_height; i++)
+        {
+            ShiftDown(i);    
+        }
+    }
+
+    /*
+        recursive method to clear multiple rows at once
+    */
+    public void ClearRows()
+    {
+        //for loop to copy rows down from wanted row, if its complete
+        for (int i = 0; i < layout_height; i++)
+        {
+            if (isComplete(i))
+            {
+                ClearRow(i);
+                ShiftRowsDown(i + 1);
+                i--;
+            }
+        }
+    }
 }

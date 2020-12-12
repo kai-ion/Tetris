@@ -61,16 +61,17 @@ public class GameController : MonoBehaviour
             //make sure block spawns on a whole number square
             spawner.transform.position = Vectorf.Round(spawner.transform.position);
         }
+        else
+        {
+            Debug.LogWarning("No Spawner Defined!");
+        }
+        
 
         if(!layout)
         {
             Debug.LogWarning("No Layout Defined!");
         }
 
-        if(!spawner)
-        {
-            Debug.LogWarning("No Spawner Defined!");
-        }
         
     }
     
@@ -86,8 +87,8 @@ public class GameController : MonoBehaviour
                 current_block.RotateLeft();
             }
     	}
-        /*
-    	if (Input.GetKeyDown(KeyCode.DownArrow) && (Time.time > timeToNextKey_Down) ||  (Time.time > drop_timer)) {
+        
+    	if (Input.GetKey(KeyCode.DownArrow) && (Time.time > timeToNextKey_Down) ||  (Time.time > drop_timer)) {
             drop_timer = Time.time + drop_interval;
 			timeToNextKey_Down = Time.time + keyRepeatRate_Down;
 
@@ -96,10 +97,10 @@ public class GameController : MonoBehaviour
             //make sure block dont over lap
             if (!layout.isValidPosition(current_block))
             {
-                current_block.MoveUp();
+                LandBlock();
             }
     	}
-        */
+        
     	if (Input.GetKey (KeyCode.LeftArrow) && (Time.time > timeTo_NextKey_LeftRight) || Input.GetKeyDown(KeyCode.LeftArrow)) {
     		current_block.MoveLeft();
             timeTo_NextKey_LeftRight = Time.time + key_RepeatRate_LeftRight;
@@ -156,11 +157,33 @@ public class GameController : MonoBehaviour
         }
     }
 
+    /*
+        block lands method
+    */
+	void LandBlock ()
+	{
+		// move the block up, store it in datastructure
+		current_block.MoveUp ();
+		layout.StoreBlock (current_block);
+
+		// spawn a new block
+		current_block = spawner.SpawnBlock();
+
+		// set all of the time_ToNextKey variables to current time, 
+        // so no input delay for the next spawned block
+		timeTo_NextKey_LeftRight = Time.time;
+		timeToNextKey_Down = Time.time;
+		timeTo_NextKeyRotate = Time.time;
+
+		// remove completed rows from the board if we have any 
+		layout.ClearRows();
+	}
+
     // Update is called once per frame
     void Update()
     {
         //if spawner or layout notset dont update the game
-        if (!layout || !spawner)
+        if (!layout || !spawner || !current_block)
         {
             return;
         }
