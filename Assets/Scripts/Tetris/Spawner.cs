@@ -14,6 +14,9 @@ public class Spawner : MonoBehaviour
     {
         int i = Random.Range(0, blocks.Length); //get random int range to num of blocks
         
+        //for testing
+        //int i = 0;
+
         /*
             Check null case
         */

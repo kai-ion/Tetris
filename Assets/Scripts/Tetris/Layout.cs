@@ -13,6 +13,9 @@ public class Layout : MonoBehaviour
      //datastructure to store blocks in each grid
     Transform[,] layout_grid;  
 
+    public int completed_rows = 0;  //total number of cleared rows counter
+    public int num_rows = 0;
+
     //run before Start
     void Awake() {
         layout_grid = new Transform[layout_width, layout_height];
@@ -175,14 +178,17 @@ public class Layout : MonoBehaviour
     */
     public void ClearRows()
     {
+        num_rows = 0;   //reset row clear counter to zero
         //for loop to copy rows down from wanted row, if its complete
         for (int i = 0; i < layout_height; i++)
         {
             if (isComplete(i))
             {
+                completed_rows++;
                 ClearRow(i);
                 ShiftRowsDown(i + 1);
                 i--;
+                num_rows++;
             }
         }
     }
