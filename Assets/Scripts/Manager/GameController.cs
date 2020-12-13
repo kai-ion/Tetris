@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour
 {
@@ -11,7 +12,9 @@ public class GameController : MonoBehaviour
     ScoreManager score_manager;   //score manager script reference
 
     public GameObject gameover_panel;
-    bool game_over = false;
+    public bool game_over = false;
+
+    PauseGame pause_game;
 
     Blocks current_block;   //currently active block
     float drop_interval = .25f;
@@ -22,17 +25,17 @@ public class GameController : MonoBehaviour
     float timeTo_NextKey_LeftRight;
 
 	[Range(0.02f,1f)]
-	public float key_RepeatRate_LeftRight = 0.25f;
+	public float key_RepeatRate_LeftRight = 0.2f;
 
 	float timeToNextKey_Down;
 
-	[Range(0.01f,0.5f)]
-	public float keyRepeatRate_Down = 0.02f;
+	[Range(0.005f,0.5f)]
+	public float keyRepeatRate_Down = 0.01f;
 
 	float timeTo_NextKeyRotate;
 
     [Range(0.02f,1f)]
-	public float keyRepeatRate_Rotate = 0.25f;
+	public float keyRepeatRate_Rotate = 0.2f;
 
     // Start is called before the first frame update
     void Start()
@@ -42,6 +45,7 @@ public class GameController : MonoBehaviour
         spawner = GameObject.FindWithTag("Spawner").GetComponent<Spawner>();
 
         score_manager = GameObject.FindObjectOfType<ScoreManager>();
+        pause_game = GameObject.FindObjectOfType<PauseGame>();
         /**
         FindObjectOfType<s>, same function as above but slower
         **/
@@ -170,6 +174,12 @@ public class GameController : MonoBehaviour
             }
     	}
 
+        //press p to pause game
+        if (Input.GetKeyDown(KeyCode.P) || Input.GetKeyDown(KeyCode.Escape))
+        {
+            pause_game.PauseMenu();
+        }
+
          /*
         if it past a certain time, start making the block fall
         allows player time to react
@@ -277,8 +287,9 @@ public class GameController : MonoBehaviour
     // reload the level
 	public void Restart()
 	{
+        //set time scale back to 1 and load gamescene
         Time.timeScale = 1f;
-		Debug.Log("Restart");
-		//Application.LoadLevel(Application.loadedLevel);
+		Debug.Log("Restart Game");
+        SceneManager.LoadScene("GameScene");
 	}
 }
