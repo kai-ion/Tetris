@@ -25,7 +25,7 @@ public class GameController : MonoBehaviour
     float timeTo_NextKey_LeftRight;
 
 	[Range(0.02f,1f)]
-	public float key_RepeatRate_LeftRight = 0.2f;
+	public float keyRepeatRate_LeftRight = 0.2f;
 
 	float timeToNextKey_Down;
 
@@ -53,7 +53,7 @@ public class GameController : MonoBehaviour
         //spawner = GameObject.FindObjectOfType<Spawner>();   //another find script method
 
         timeToNextKey_Down = Time.time + keyRepeatRate_Down;
-		timeTo_NextKey_LeftRight = Time.time + key_RepeatRate_LeftRight;
+		timeTo_NextKey_LeftRight = Time.time + keyRepeatRate_LeftRight;
 		timeTo_NextKeyRotate = Time.time + keyRepeatRate_Rotate;
 
         
@@ -111,6 +111,17 @@ public class GameController : MonoBehaviour
                 current_block.RotateLeft();
             }
     	}
+
+        if (Input.GetKeyDown(KeyCode.LeftControl) && (Time.time > timeTo_NextKeyRotate)) {	//change object direction
+    		current_block.RotateLeft();
+            timeTo_NextKeyRotate = Time.time + keyRepeatRate_Rotate;
+
+            //make sure block dont over lap
+            if (!layout.isValidPosition(current_block))
+            {
+                current_block.RotateRight();
+            }
+    	}
         
         if (Input.GetKeyDown(KeyCode.DownArrow) && (Time.time > timeToNextKey_Down)) {	//change object direction
     		current_block.MoveDown();
@@ -155,7 +166,7 @@ public class GameController : MonoBehaviour
         
     	if ((Input.GetKey (KeyCode.LeftArrow) && (Time.time > timeTo_NextKey_LeftRight)) || Input.GetKeyDown(KeyCode.LeftArrow)) {
     		current_block.MoveLeft();
-            timeTo_NextKey_LeftRight = Time.time + key_RepeatRate_LeftRight;
+            timeTo_NextKey_LeftRight = Time.time + keyRepeatRate_LeftRight;
 
             //make sure block dont over lap
             if (!layout.isValidPosition(current_block))
@@ -165,7 +176,7 @@ public class GameController : MonoBehaviour
     	}
     	if ((Input.GetKey (KeyCode.RightArrow) && (Time.time > timeTo_NextKey_LeftRight)) || Input.GetKeyDown(KeyCode.RightArrow)) {
     		current_block.MoveRight();
-            timeTo_NextKey_LeftRight = Time.time + key_RepeatRate_LeftRight;
+            timeTo_NextKey_LeftRight = Time.time + keyRepeatRate_LeftRight;
 
             //make sure block dont over lap
             if (!layout.isValidPosition(current_block))
