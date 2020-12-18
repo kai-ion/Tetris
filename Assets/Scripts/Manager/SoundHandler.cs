@@ -16,7 +16,7 @@ public class SoundHandler : MonoBehaviour
         movement = mysounds[0];
         transform = mysounds[1];
         straight = mysounds[2];
-        die = mysounds[4];
+        die = mysounds[3];
     }
 
     public void PlayMove()
