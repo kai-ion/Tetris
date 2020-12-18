@@ -320,4 +320,20 @@ public class GameController : MonoBehaviour
 		Debug.Log("Restart Game");
         SceneManager.LoadScene("GameScene");
 	}
+
+    // Return to main
+    public void MainMenu()
+	{
+        //set time scale back to 1 and load gamescene
+        Time.timeScale = 1f;
+		Debug.Log("Return to MainMenu");
+        SceneManager.LoadScene("StartScene");
+	}
+
+    // Return to main
+    public void QuitGame()
+	{
+		Debug.Log("Exit Game");
+        Application.Quit();
+	}
 }
