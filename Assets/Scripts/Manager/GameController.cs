@@ -17,7 +17,7 @@ public class GameController : MonoBehaviour
     PauseGame pause_game;
 
     Blocks current_block;   //currently active block
-    float drop_interval = .25f;
+    float drop_interval = .5f;
     float dropInterval_new;
     private SoundHandler sh;
     float drop_timer;  
@@ -126,6 +126,7 @@ public class GameController : MonoBehaviour
         
         if (Input.GetKeyDown(KeyCode.DownArrow) && (Time.time > timeToNextKey_Down)) {	//change object direction
     		current_block.MoveDown();
+            current_block.MoveDown();
             timeToNextKey_Down = Time.time + keyRepeatRate_Down;
 
             //make sure block dont over lap
@@ -164,9 +165,6 @@ public class GameController : MonoBehaviour
 				}  
             }
     	}
-        if (Input.GetKey(KeyCode.Space) ){
-            sh.Playstraight();
-        }
         
     	if ((Input.GetKey (KeyCode.LeftArrow) && (Time.time > timeTo_NextKey_LeftRight)) || Input.GetKeyDown(KeyCode.LeftArrow)) {
     		current_block.MoveLeft();
