@@ -284,6 +284,7 @@ public class GameController : MonoBehaviour
     // triggered when we are over the board's limit
 	void GameOver ()
 	{            
+        sh.PlayDie();
 		// move the shape one row up
 		current_block.MoveUp ();
 
