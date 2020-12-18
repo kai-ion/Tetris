@@ -147,7 +147,7 @@ public class GameController : MonoBehaviour
     	if (Input.GetKey(KeyCode.Space) && (Time.time > timeToNextKey_Down) ||  (Time.time > drop_timer)) {
             drop_timer = Time.time + dropInterval_new;
 			timeToNextKey_Down = Time.time + keyRepeatRate_Down;
-
+            
     		current_block.MoveDown();
 
             //make sure block dont over lap
@@ -164,6 +164,9 @@ public class GameController : MonoBehaviour
 				}  
             }
     	}
+        if (Input.GetKey(KeyCode.Space) ){
+            sh.Playstraight();
+        }
         
     	if ((Input.GetKey (KeyCode.LeftArrow) && (Time.time > timeTo_NextKey_LeftRight)) || Input.GetKeyDown(KeyCode.LeftArrow)) {
     		current_block.MoveLeft();
@@ -256,7 +259,7 @@ public class GameController : MonoBehaviour
             //increase drop speed
 			if (score_manager.didLevelUp)
 			{
-				dropInterval_new = Mathf.Clamp(drop_interval - ((float)score_manager.level * 0.05f), 0.05f, 1f);
+				dropInterval_new = Mathf.Clamp(drop_interval - ((float)score_manager.level * 0.005f), 0.005f, 1f);
 			}
 			
 		}
