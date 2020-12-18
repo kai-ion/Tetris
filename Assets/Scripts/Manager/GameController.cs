@@ -19,7 +19,7 @@ public class GameController : MonoBehaviour
     Blocks current_block;   //currently active block
     float drop_interval = .25f;
     float dropInterval_new;
-
+    private SoundHandler sh;
     float drop_timer;  
 
     float timeTo_NextKey_LeftRight;
@@ -55,8 +55,8 @@ public class GameController : MonoBehaviour
         timeToNextKey_Down = Time.time + keyRepeatRate_Down;
 		timeTo_NextKey_LeftRight = Time.time + keyRepeatRate_LeftRight;
 		timeTo_NextKeyRotate = Time.time + keyRepeatRate_Rotate;
+        sh = GetComponent<SoundHandler>();
 
-        
 
         /**
         check if spawner is assigned
@@ -104,6 +104,7 @@ public class GameController : MonoBehaviour
     	if (Input.GetKeyDown(KeyCode.UpArrow) && (Time.time > timeTo_NextKeyRotate)) {	//change object direction
     		current_block.RotateRight();
             timeTo_NextKeyRotate = Time.time + keyRepeatRate_Rotate;
+            sh.Playtransform();
 
             //make sure block dont over lap
             if (!layout.isValidPosition(current_block))
@@ -167,7 +168,7 @@ public class GameController : MonoBehaviour
     	if ((Input.GetKey (KeyCode.LeftArrow) && (Time.time > timeTo_NextKey_LeftRight)) || Input.GetKeyDown(KeyCode.LeftArrow)) {
     		current_block.MoveLeft();
             timeTo_NextKey_LeftRight = Time.time + keyRepeatRate_LeftRight;
-
+            sh.PlayMove();
             //make sure block dont over lap
             if (!layout.isValidPosition(current_block))
             {
@@ -177,7 +178,7 @@ public class GameController : MonoBehaviour
     	if ((Input.GetKey (KeyCode.RightArrow) && (Time.time > timeTo_NextKey_LeftRight)) || Input.GetKeyDown(KeyCode.RightArrow)) {
     		current_block.MoveRight();
             timeTo_NextKey_LeftRight = Time.time + keyRepeatRate_LeftRight;
-
+            sh.PlayMove();
             //make sure block dont over lap
             if (!layout.isValidPosition(current_block))
             {
@@ -282,13 +283,14 @@ public class GameController : MonoBehaviour
 
     // triggered when we are over the board's limit
 	void GameOver ()
-	{
+	{            
 		// move the shape one row up
 		current_block.MoveUp ();
 
-		// turn on the Game Over Panel
-		if (gameover_panel) {
-			gameover_panel.SetActive (true);
+        // turn on the Game Over Panel
+        if (gameover_panel) {
+			gameover_panel.SetActive (true);        
+
 		}
 
 		// set the game over condition to true
