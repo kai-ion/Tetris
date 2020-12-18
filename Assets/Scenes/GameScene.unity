@@ -3074,13 +3074,17 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'left and right arrow for movement
+  m_text: 'Left and Right arrow for movement
 
 
-    space for Drop
+    Space for Drop
 
 
-    p for pause
+    P for Pause
+
+
+    Up
+    and Control for Rotate
 
 '
   m_isRightToLeft: 0

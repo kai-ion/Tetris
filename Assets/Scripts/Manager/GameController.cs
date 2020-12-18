@@ -11,6 +11,8 @@ public class GameController : MonoBehaviour
 
     ScoreManager score_manager;   //score manager script reference
 
+    private SoundHandler sh;
+
     public GameObject gameover_panel;
     public bool game_over = false;
 
@@ -19,7 +21,8 @@ public class GameController : MonoBehaviour
     Blocks current_block;   //currently active block
     float drop_interval = .5f;
     float dropInterval_new;
-    private SoundHandler sh;
+    float previous_time;
+    
     float drop_timer;  
 
     float timeTo_NextKey_LeftRight;
@@ -36,6 +39,8 @@ public class GameController : MonoBehaviour
 
     [Range(0.02f,1f)]
 	public float keyRepeatRate_Rotate = 0.2f;
+
+    bool hard_drop;
 
     // Start is called before the first frame update
     void Start()
@@ -57,6 +62,7 @@ public class GameController : MonoBehaviour
 		timeTo_NextKeyRotate = Time.time + keyRepeatRate_Rotate;
         sh = GetComponent<SoundHandler>();
 
+        hard_drop = false;
 
         /**
         check if spawner is assigned
@@ -101,7 +107,7 @@ public class GameController : MonoBehaviour
     
     private void Controll() 
     {
-    	if (Input.GetKeyDown(KeyCode.UpArrow) && (Time.time > timeTo_NextKeyRotate)) {	//change object direction
+    	if (Input.GetKey(KeyCode.UpArrow) && (Time.time > timeTo_NextKeyRotate)) {	//change object direction
     		current_block.RotateRight();
             timeTo_NextKeyRotate = Time.time + keyRepeatRate_Rotate;
             sh.Playtransform();
@@ -113,7 +119,7 @@ public class GameController : MonoBehaviour
             }
     	}
 
-        if (Input.GetKeyDown(KeyCode.LeftControl) && (Time.time > timeTo_NextKeyRotate)) {	//change object direction
+        if (Input.GetKey(KeyCode.LeftControl) && (Time.time > timeTo_NextKeyRotate)) {	//change object direction
     		current_block.RotateLeft();
             timeTo_NextKeyRotate = Time.time + keyRepeatRate_Rotate;
 
@@ -124,10 +130,9 @@ public class GameController : MonoBehaviour
             }
     	}
         
-        if (Input.GetKeyDown(KeyCode.DownArrow) && (Time.time > timeToNextKey_Down)) {	//change object direction
+        if (Time.time - previous_time > (Input.GetKey(KeyCode.DownArrow) ? drop_interval / 10 : drop_interval)){	//change object direction
     		current_block.MoveDown();
-            current_block.MoveDown();
-            timeToNextKey_Down = Time.time + keyRepeatRate_Down;
+            previous_time = Time.time;
 
             //make sure block dont over lap
             //make sure block dont over lap
@@ -145,11 +150,15 @@ public class GameController : MonoBehaviour
             }
     	}
 
-    	if (Input.GetKey(KeyCode.Space) && (Time.time > timeToNextKey_Down) ||  (Time.time > drop_timer)) {
+    	if (Input.GetKeyDown(KeyCode.Space) ) {
             drop_timer = Time.time + dropInterval_new;
 			timeToNextKey_Down = Time.time + keyRepeatRate_Down;
             
-    		current_block.MoveDown();
+            while (layout.isValidPosition(current_block) && !hard_drop)
+            {
+                current_block.MoveDown();
+            }
+    		
 
             //make sure block dont over lap
             if (!layout.isValidPosition(current_block))
@@ -165,6 +174,10 @@ public class GameController : MonoBehaviour
 				}  
             }
     	}
+        else if (Input.GetKeyUp(KeyCode.Space))
+        {
+            hard_drop = false;
+        }
         
     	if ((Input.GetKey (KeyCode.LeftArrow) && (Time.time > timeTo_NextKey_LeftRight)) || Input.GetKeyDown(KeyCode.LeftArrow)) {
     		current_block.MoveLeft();
@@ -197,7 +210,7 @@ public class GameController : MonoBehaviour
         if it past a certain time, start making the block fall
         allows player time to react
         */
-        /*
+   
         if (Time.time > drop_timer)
         {
             drop_timer = Time.time + drop_interval;
@@ -205,14 +218,13 @@ public class GameController : MonoBehaviour
             if (current_block)
             {
                 current_block.MoveDown();
-
                 /*
                     once block falls to bottom, 
                     we stop its MoveDown method and push it back up one
                     we have to push back up because our script only detects
                     that its out of boundary when it actually goes out of boundary
                     afterwards set current_block to a new block, to spawn new block
-                *//*
+                */
                 if (!layout.isValidPosition (current_block))
                 {
                     //block lands
@@ -226,7 +238,7 @@ public class GameController : MonoBehaviour
                 
             }
             
-        }*/
+        }
     }
 
     /*
@@ -240,6 +252,7 @@ public class GameController : MonoBehaviour
 
 		// spawn a new block
 		current_block = spawner.SpawnBlock();
+        hard_drop = true;
 
 		// set all of the time_ToNextKey variables to current time, 
         // so no input delay for the next spawned block
